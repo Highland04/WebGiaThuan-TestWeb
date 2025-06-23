@@ -1,0 +1,78 @@
+﻿@model buoi08.ADMIN.Hoa
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container mt-4">
+        <h4 class="mb-3">Chi tiết hoa</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.TenHoa)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.TenHoa)
+            </dd>
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.GiaBan)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.GiaBan)
+            </dd>
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.MoTa)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.MoTa)
+            </dd>
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Anh)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Anh)
+            </dd>
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.SoLuongTon)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.SoLuongTon)
+            </dd>
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.LoaiHoa.TenLoai)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.LoaiHoa.TenLoai)
+            </dd>
+
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.NhaCungCap.TenNCC)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.NhaCungCap.TenNCC)
+            </dd>
+        </dl>
+        <div class="mt-3">
+            @Html.ActionLink("Edit", "Edit", new { id = Model.MaHoa }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary ml-2" })
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
