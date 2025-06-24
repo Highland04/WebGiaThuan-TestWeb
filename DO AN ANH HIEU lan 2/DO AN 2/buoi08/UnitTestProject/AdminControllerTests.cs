@@ -35,7 +35,7 @@ namespace UnitTestProject
         }
     }
 
-    [TestClass]
+    [TestClass] //giả lập dữ liệu controller
     public class AdminControllerTests
     {
         private TestableAdminController CreateControllerWithMockContext(
@@ -62,6 +62,30 @@ namespace UnitTestProject
         }
 
         [TestMethod] //Unit Test
+        public void Create_Post_ValidModel_RedirectsToIndex()
+        {
+            var hoas = new List<Hoa>();
+            var controller = CreateControllerWithMockContext(hoas);
+
+            var newHoa = new Hoa
+            {
+                MaHoa = 3,
+                TenHoa = "Hoa Hồng",
+                GiaBan = 100,
+                MoTa = "Hoa đẹp",
+                Anh = "rose.jpg",
+                SoLuongTon = 5,
+                MaNCC = 1,
+                MaLoai = 1
+            };
+
+            var result = controller.Create(newHoa) as RedirectToRouteResult;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Index", result.RouteValues["action"]);
+        }
+
+        [TestMethod] //Unit Test
         public void Create_Post_InvalidModel_ReturnsView()
         {
             var hoa = new Hoa { MaHoa = 2, TenHoa = "" }; // Tên hoa thiếu
@@ -74,6 +98,52 @@ namespace UnitTestProject
             Assert.IsNotNull(result);
             Assert.AreEqual("", result.ViewName);
             Assert.AreEqual(hoa, result.Model);
+        }
+
+        [TestMethod] //Unit Test
+        public void Edit_Post_ValidModel_RedirectsToIndex()
+        {
+            var hoaList = new List<Hoa>
+            {
+                new Hoa
+                {
+                    MaHoa = 1,
+                    TenHoa = "Hoa Cũ",
+                    GiaBan = 50,
+                    MoTa = "Cũ",
+                    Anh = "old.jpg",
+                    SoLuongTon = 10,
+                    MaNCC = 1,
+                    MaLoai = 1
+                }
+            };
+
+            var mockSet = MockDbSetHelper.CreateMockSet(hoaList);
+
+            var mockContext = new Mock<Doanltweb3Entities2>();
+            mockContext.Setup(m => m.Hoas).Returns(mockSet.Object);
+            mockContext.Setup(m => m.SaveChanges()).Verifiable();
+
+            var controller = new TestableAdminController();
+            controller.SetContext(mockContext.Object);
+
+            var updatedHoa = new Hoa
+            {
+                MaHoa = 1,
+                TenHoa = "Hoa Mới",
+                GiaBan = 100,
+                MoTa = "Mô tả mới",
+                Anh = "hoa_moi.jpg",
+                SoLuongTon = 20,
+                MaNCC = 1,
+                MaLoai = 1
+            };
+
+            var result = controller.Edit(updatedHoa) as RedirectToRouteResult;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Index", result.RouteValues["action"]);
+            mockContext.Verify(m => m.SaveChanges(), Times.Once);
         }
 
         [TestMethod] //Unit Test
@@ -100,6 +170,30 @@ namespace UnitTestProject
             Assert.AreEqual("", result.ViewName);
             Assert.AreEqual(hoa, result.Model);
         }
+
+        [TestMethod]
+        public void DeleteConfirmed_ValidId_RedirectsToIndex()
+        {
+            var hoaToDelete = new Hoa { MaHoa = 5, TenHoa = "Hoa Xoá" };
+
+            var hoaList = new List<Hoa> { hoaToDelete };
+
+            var mockSet = new Mock<DbSet<Hoa>>();
+            mockSet.Setup(m => m.Find(5)).Returns(hoaToDelete);
+            mockSet.Setup(m => m.Remove(It.IsAny<Hoa>())).Callback<Hoa>(h => hoaList.Remove(h));
+
+            var mockContext = new Mock<Doanltweb3Entities2>();
+            mockContext.Setup(m => m.Hoas).Returns(mockSet.Object);
+
+            var controller = new TestableAdminController();
+            controller.SetContext(mockContext.Object);
+
+            var result = controller.DeleteConfirmed(5) as RedirectToRouteResult;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Index", result.RouteValues["action"]);
+        }
+
 
         [TestMethod] //Unit Test
         public void DeleteConfirmed_InvalidId_ReturnsRedirectToIndex()
